@@ -7,11 +7,19 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:tailwind": "npx tailwindcss@3.3.5 -i ./src/input.css -o ./dist/output.css --watch"
   },
   "dependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "@zxing/library": "^0.21.3",
+    "axios": "^1.8.4",
+    "firebase": "^11.6.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
+    "react-qr-code": "^2.0.15",
+    "react-router-dom": "^7.5.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
@@ -24,7 +32,7 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
     "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.4",
+    "tailwindcss": "^3.3.5",
     "vite": "^6.3.1"
   }
 }
