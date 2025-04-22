@@ -13,12 +13,12 @@ import './index.css';
 function App() {
   const { currentUser } = useAuth();
 
-  // You can update this logic to check for roles from user object if available
+  
   const isAdmin = currentUser?.email === 'admin@example.com'; 
 
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
+      <div className="min-h-screen">
         <Navbar />
         <main className="w-full min-h-screen bg-gray-50">
           <Routes>
