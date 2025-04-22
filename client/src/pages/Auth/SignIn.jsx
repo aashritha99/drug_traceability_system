@@ -1,4 +1,3 @@
-// client/src/pages/Auth/SignIn.jsx
 import { useState } from 'react';
 import { signInWithGoogle } from '../../services/firebase';
 import { useAuth } from '../../context/AuthContext';
@@ -26,31 +25,40 @@ export function SignIn() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg">
-        <div className="text-center">
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Drug Traceability System
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Sign in with your Google account
-          </p>
-        </div>
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <span className="block sm:inline">{error}</span>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
+      <div className="w-full max-w-md mx-auto px-4">
+        <div className="bg-white p-8 rounded-xl shadow-md text-center">
+          {/* Logo/Title Section */}
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">
+              Drug Traceability System
+            </h1>
+            <p className="text-gray-600">
+              Sign in with your Google account
+            </p>
           </div>
-        )}
-        <div className="mt-8 space-y-6">
-          <button
-            onClick={handleGoogleSignIn}
-            className="group relative w-full flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-          >
-            <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-              <FcGoogle className="h-5 w-5" />
-            </span>
-            Sign in with Google
-          </button>
+
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded">
+              <p>{error}</p>
+            </div>
+          )}
+
+          {/* Sign In Button */}
+          <div className="flex flex-col items-center">
+            <button
+              onClick={handleGoogleSignIn}
+              className="w-full max-w-xs flex items-center justify-center gap-3 py-3 px-6 
+                       border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors
+                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              <FcGoogle className="text-xl" />
+              <span className="text-sm font-medium">
+                Sign in with Google
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

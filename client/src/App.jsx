@@ -8,39 +8,69 @@ import { DrugManagement } from './pages/Admin/DrugManagement';
 import { TrackDrug } from './pages/User/TrackDrug';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
+import './index.css'; 
 
 function App() {
   const { currentUser } = useAuth();
-  const isAdmin = currentUser?.email === 'admin@example.com'; // Replace with your admin email
+
+  // You can update this logic to check for roles from user object if available
+  const isAdmin = currentUser?.email === 'admin@example.com'; 
 
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
         <Navbar />
-        <main className="flex-grow container mx-auto px-4 py-8">
+        <main className="w-full min-h-screen bg-gray-50">
           <Routes>
-            <Route path="/" element={currentUser ? <Navigate to={isAdmin ? "/admin" : "/user"} /> : <SignIn />} />
+            {/* Public Routes */}
+            <Route 
+              path="/" 
+              element={
+                currentUser 
+                  ? <Navigate to={isAdmin ? "/admin" : "/user"} /> 
+                  : <SignIn />
+              } 
+            />
             <Route path="/signin" element={<SignIn />} />
-            
+
             {/* Admin Routes */}
             <Route 
               path="/admin" 
-              element={isAdmin ? <AdminDashboard /> : <Navigate to="/" />} 
+              element={
+                currentUser && isAdmin 
+                  ? <AdminDashboard /> 
+                  : <Navigate to="/" />
+              } 
             />
             <Route 
               path="/admin/drugs" 
-              element={isAdmin ? <DrugManagement /> : <Navigate to="/" />} 
+              element={
+                currentUser && isAdmin 
+                  ? <DrugManagement /> 
+                  : <Navigate to="/" />
+              } 
             />
-            
+
             {/* User Routes */}
             <Route 
               path="/user" 
-              element={currentUser && !isAdmin ? <UserDashboard /> : <Navigate to="/" />} 
+              element={
+                currentUser && !isAdmin 
+                  ? <UserDashboard /> 
+                  : <Navigate to="/" />
+              } 
             />
             <Route 
               path="/user/track" 
-              element={currentUser && !isAdmin ? <TrackDrug /> : <Navigate to="/" />} 
+              element={
+                currentUser && !isAdmin 
+                  ? <TrackDrug /> 
+                  : <Navigate to="/" />
+              } 
             />
+
+            {/* Catch-all Route */}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
         <Footer />
