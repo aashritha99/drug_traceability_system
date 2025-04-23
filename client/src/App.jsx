@@ -15,7 +15,7 @@ import './index.css';
 
 function App() {
   const { currentUser } = useAuth();
-  const isAdmin = currentUser?.email === 'admin@example.com';
+  const isAdmin = currentUser?.email === 'admin@pharmatrack.com';
 
   return (
     <Router>

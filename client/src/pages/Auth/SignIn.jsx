@@ -16,7 +16,7 @@ export function SignIn() {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
-      navigate(currentUser?.email === 'admin@example.com' ? '/admin' : '/user');
+      navigate(currentUser?.email === 'admin@pharmatrack.com' ? '/admin' : '/user');
     } catch (err) {
       setError('Failed to sign in with Google');
       console.error(err);
@@ -30,7 +30,7 @@ export function SignIn() {
 
     try {
       await emailSignIn(email, password);
-      navigate(currentUser?.email === 'admin@example.com' ? '/admin' : '/user');
+      navigate(currentUser?.email === 'admin@pharmatrack.com' ? '/admin' : '/user');
     } catch (err) {
       setError(err.message || 'Failed to sign in');
     } finally {
