@@ -1,16 +1,21 @@
 // client/src/components/common/Navbar.jsx
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { signOut } from '../../services/firebase';
+import { signOut } from 'firebase/auth'; // Import signOut from firebase/auth
 
 export function Navbar() {
-  const { currentUser } = useAuth();
+  const { currentUser, auth } = useAuth(); // Import auth from useAuth hook
   const navigate = useNavigate();
   const isAdmin = currentUser?.email === 'admin@example.com';
 
   const handleSignOut = async () => {
-    await signOut();
-    navigate('/signin');
+    try {
+      await signOut(auth); // Pass auth to signOut function
+      navigate('/signin');
+    } catch (error) {
+      console.error("Sign out error:", error);
+      // Optionally, display an error message to the user
+    }
   };
 
   return (

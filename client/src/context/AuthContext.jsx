@@ -19,7 +19,8 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
-    loading
+    loading,
+    auth // Include auth in the context value
   };
 
   return (
