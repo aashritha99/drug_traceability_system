@@ -9,7 +9,7 @@ export default function Landing() {
         <div className="container mx-auto px-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-blue-600">PharmaTrack</h1>
           <div className="flex space-x-4">
-            <Link to="/login" className="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+            <Link to="/signin" className="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg">
               Login
             </Link>
             <Link to="/signup" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
@@ -30,7 +30,7 @@ export default function Landing() {
           </p>
           <div className="flex justify-center space-x-4">
             <Link 
-              to="/login" 
+              to="/signin" 
               className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               Get Started

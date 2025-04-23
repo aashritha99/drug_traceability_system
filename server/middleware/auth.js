@@ -11,6 +11,18 @@ const authMiddleware = async (req, res, next) => {
     
     const token = authHeader.split(' ')[1];
     const decodedToken = await admin.auth().verifyIdToken(token);
+
+    // Check for admin custom claim
+    if (decodedToken.admin === true) {
+      req.user = {
+        uid: decodedToken.uid,
+        email: decodedToken.email,
+        name: decodedToken.name || '',
+        isAdmin: true // Add isAdmin flag for easier checking later
+      };
+      next(); // Allow admin to proceed
+      return;
+    }
     
     req.user = {
       uid: decodedToken.uid,

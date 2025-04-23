@@ -50,6 +50,11 @@ router.delete('/:id', authMiddleware, async (req, res) => {
 // Update drug status (tracking)
 router.post('/:id/track', authMiddleware, async (req, res) => {
   try {
+    // Allow admin users to track drugs
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ error: 'Forbidden - Admins only' });
+    }
+
     const { status, location, handledBy } = req.body;
     const drug = await Drug.findById(req.params.id);
     
