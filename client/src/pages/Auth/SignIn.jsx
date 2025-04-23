@@ -39,7 +39,7 @@ export function SignIn() {
   };
 
   if (currentUser) {
-    navigate(currentUser.email === 'admin@example.com' ? '/admin' : '/user');
+    navigate(currentUser.email === 'admin@pharmatrack.com' ? '/admin' : '/user');
     return null;
   }
 

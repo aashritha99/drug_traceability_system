@@ -22,7 +22,7 @@ router.post('/verify', async (req, res) => {
       email: decodedToken.email,
       name: decodedToken.name || '',
       picture: decodedToken.picture || '',
-      isAdmin: decodedToken.email === 'admin@example.com' // Replace with your admin email
+      isAdmin: decodedToken.email === 'admin@pharmatrack.com' // Replace with your admin email
     });
   } catch (err) {
     console.error('Error verifying ID token:', err);
@@ -48,7 +48,7 @@ router.get('/me', async (req, res) => {
       email: decodedToken.email,
       name: decodedToken.name || '',
       picture: decodedToken.picture || '',
-      isAdmin: decodedToken.email === 'admin@example.com' // Replace with your admin email
+      isAdmin: decodedToken.email === 'admin@pharmatrack.com' // Replace with your admin email
     });
   } catch (err) {
     console.error('Error getting user data:', err);

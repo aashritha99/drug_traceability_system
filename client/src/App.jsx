@@ -1,4 +1,3 @@
-// client/src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import { SignIn } from './pages/Auth/SignIn';
@@ -10,7 +9,8 @@ import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
 import Landing from './pages/Landing';
 import { Signup } from './pages/Auth/Signup';
-import { About } from './pages/User/About'; // Import About component
+import { About } from './pages/User/About';
+import Contact from './pages/Contact'; // Add this import
 import './index.css';
 
 function App() {
@@ -34,9 +34,10 @@ function App() {
               } 
             />
             <Route path="/login" element={<SignIn />} />
-            <Route path="/signin" element={<SignIn />} /> {/* Keeping both for backward compatibility */}
+            <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<Signup />} />
-
+            <Route path="/contact" element={<Contact />} /> 
+            
             {/* Admin Routes */}
             <Route 
               path="/admin" 
@@ -75,7 +76,7 @@ function App() {
 
             {/* About Route */}
             <Route path="/About" element={<About />} />
-
+            
             {/* Catch-all Route */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

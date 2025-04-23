@@ -12,13 +12,21 @@ export function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Link
             to="/admin/drugs"
-            className="bg-primary hover:bg-primary-dark text-white rounded-lg p-6 shadow transition duration-300"
+            className="bg-primary bg-purple-400 text-white rounded-lg p-6 shadow transition duration-300"
           >
             <h2 className="text-xl font-semibold mb-2">Manage Drugs</h2>
             <p className="text-primary-light">Add, edit, and track drug information</p>
           </Link>
+
+          <Link
+                      to="/user/track"
+                      className="rounded-xl p-6 bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 shadow-md"
+                    >
+                      <h2 className="text-xl font-semibold mb-2">Track Drug</h2>
+                      <p className="text-blue-100">Scan or enter drug details to track its lifecycle.</p>
+                    </Link>
           
-          <div className="bg-secondary hover:bg-secondary-dark text-white rounded-lg p-6 shadow transition duration-300">
+          <div className="bg-secondary bg-red-200 text-white rounded-lg p-6 shadow transition duration-300">
             <h2 className="text-xl font-semibold mb-2">Analytics</h2>
             <p className="text-secondary-light">View system usage statistics</p>
           </div>

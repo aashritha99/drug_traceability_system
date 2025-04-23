@@ -1,20 +1,18 @@
-// client/src/components/common/Navbar.jsx
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { signOut } from 'firebase/auth'; // Import signOut from firebase/auth
+import { signOut } from 'firebase/auth';
 
 export function Navbar() {
-  const { currentUser, auth } = useAuth(); // Import auth from useAuth hook
+  const { currentUser, auth } = useAuth();
   const navigate = useNavigate();
-  const isAdmin = currentUser?.email === 'admin@example.com';
+  const isAdmin = currentUser?.email === 'admin@pharmatrack.com';
 
   const handleSignOut = async () => {
     try {
-      await signOut(auth); // Pass auth to signOut function
+      await signOut(auth);
       navigate('/signin');
     } catch (error) {
       console.error("Sign out error:", error);
-      // Optionally, display an error message to the user
     }
   };
 
@@ -36,24 +34,23 @@ export function Navbar() {
                   Dashboard
                 </Link>
                 <Link
-              to="/About"
-              className="px-3 py-2 text-gray-700 hover:text-primary transition"
-            >
-              About
-            </Link>
-                {isAdmin ? (
+                  to="/about"
+                  className="px-3 py-2 text-gray-700 hover:text-primary transition"
+                >
+                  About
+                </Link>
+                <Link 
+                  to="/user/track"
+                  className="px-3 py-2 text-gray-700 hover:text-primary transition"
+                >
+                  Track Drug
+                </Link>
+                {isAdmin && (
                   <Link 
                     to="/admin/drugs" 
                     className="px-3 py-2 text-gray-700 hover:text-primary transition"
                   >
                     Manage Drugs
-                  </Link>
-                ) : (
-                  <Link 
-                    to="/user/track" 
-                    className="px-3 py-2 text-gray-700 hover:text-primary transition"
-                  >
-                    Track Drug
                   </Link>
                 )}
               </div>
@@ -64,7 +61,7 @@ export function Navbar() {
                 </div>
                 <button 
                   onClick={handleSignOut}
-                  className="text-gray-700 hover:text-primary transition"
+                  className="text-white-700 hover:text-primary transition"
                 >
                   Sign Out
                 </button>

@@ -56,7 +56,7 @@ userSchema.statics.findOrCreate = async function(firebaseUser) {
       email: firebaseUser.email,
       name: firebaseUser.name || '',
       picture: firebaseUser.picture || '',
-      role: firebaseUser.email === 'admin@example.com' ? 'admin' : 'user' // Replace with your admin email
+      role: firebaseUser.email === 'admin@pharmatrack.com' ? 'admin' : 'user' // Replace with your admin email
     });
     await user.save();
   } else {

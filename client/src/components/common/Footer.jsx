@@ -11,7 +11,7 @@ export function Footer() {
             <div className="flex space-x-6">
               <a href="#" className="hover:text-primary transition">Privacy Policy</a>
               <a href="#" className="hover:text-primary transition">Terms of Service</a>
-              <a href="#" className="hover:text-primary transition">Contact Us</a>
+              <a href="/contact" className="hover:text-primary transition">Contact Us</a>
             </div>
           </div>
           <div className="mt-6 pt-6 border-t border-gray-700 text-center text-gray-400 text-sm">
