@@ -35,6 +35,12 @@ export function Navbar() {
                 >
                   Dashboard
                 </Link>
+                <Link
+              to="/About"
+              className="px-3 py-2 text-gray-700 hover:text-primary transition"
+            >
+              About
+            </Link>
                 {isAdmin ? (
                   <Link 
                     to="/admin/drugs" 

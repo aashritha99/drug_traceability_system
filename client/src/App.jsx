@@ -10,6 +10,7 @@ import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
 import Landing from './pages/Landing';
 import { Signup } from './pages/Auth/Signup';
+import { About } from './pages/User/About'; // Import About component
 import './index.css';
 
 function App() {
@@ -71,6 +72,9 @@ function App() {
                   : <Navigate to="/" />
               } 
             />
+
+            {/* About Route */}
+            <Route path="/About" element={<About />} />
 
             {/* Catch-all Route */}
             <Route path="*" element={<Navigate to="/" />} />
