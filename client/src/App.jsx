@@ -8,18 +8,19 @@ import { DrugManagement } from './pages/Admin/DrugManagement';
 import { TrackDrug } from './pages/User/TrackDrug';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
-import './index.css'; 
+import Landing from './pages/Landing';
+import { Signup } from './pages/Auth/Signup';
+import './index.css';
 
 function App() {
   const { currentUser } = useAuth();
-
-  
-  const isAdmin = currentUser?.email === 'admin@example.com'; 
+  const isAdmin = currentUser?.email === 'admin@example.com';
 
   return (
     <Router>
       <div className="min-h-screen">
-        <Navbar />
+        {/* Only show Navbar for authenticated routes */}
+        {currentUser && <Navbar />}
         <main className="w-full min-h-screen bg-gray-50">
           <Routes>
             {/* Public Routes */}
@@ -28,10 +29,12 @@ function App() {
               element={
                 currentUser 
                   ? <Navigate to={isAdmin ? "/admin" : "/user"} /> 
-                  : <SignIn />
+                  : <Landing />
               } 
             />
-            <Route path="/signin" element={<SignIn />} />
+            <Route path="/login" element={<SignIn />} />
+            <Route path="/signin" element={<SignIn />} /> {/* Keeping both for backward compatibility */}
+            <Route path="/signup" element={<Signup />} />
 
             {/* Admin Routes */}
             <Route 
@@ -73,7 +76,8 @@ function App() {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
-        <Footer />
+        {/* Only show Footer for authenticated routes */}
+        {currentUser && <Footer />}
       </div>
     </Router>
   );

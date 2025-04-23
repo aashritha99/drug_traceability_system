@@ -2,16 +2,15 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { 
-  getAuth, 
-  GoogleAuthProvider, 
-  signInWithPopup, 
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  onAuthStateChanged 
+  signOut,
+  onAuthStateChanged
 } from "firebase/auth";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCpazYas5m2eN3tuEqH1BV2FQ8UJVvrNRU",
   authDomain: "drug-traceability-system.firebaseapp.com",
@@ -25,8 +24,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-
-// Initialize Firebase Auth
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
@@ -35,26 +32,38 @@ export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     return result.user;
-  } catch (error) {
-    console.error("Error signing in with Google:", error);
-    throw error;
+  } catch (err) {
+    console.error("Google sign-in error:", err);
+    throw err;
   }
 };
 
-// Sign Out function
-export const signOut = async () => {
+// Email/Password Auth Functions
+export const emailSignIn = async (email, password) => {
   try {
-    await firebaseSignOut(auth);
-    return true;
-  } catch (error) {
-    console.error("Error signing out:", error);
-    return false;
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential.user;
+  } catch (err) {
+    console.error("Email sign-in error:", err);
+    throw err;
+  }
+};
+
+export const emailSignUp = async (email, password) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    return userCredential.user;
+  } catch (err) {
+    console.error("Sign up error:", err);
+    throw err;
   }
 };
 
 // Export auth and other necessary functions
 export { 
   auth, 
+  signOut, 
   onAuthStateChanged,
-  googleProvider 
+  googleProvider,
+  analytics
 };
