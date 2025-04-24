@@ -1,27 +1,41 @@
+import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export function Navbar() {
-  const currentUser = localStorage.getItem("name");
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const isAdmin = localStorage.getItem("isAdmin") === "true";
+  const currentUser = localStorage.getItem("name");
+
+  // Get user role safely
+  let isAdmin = false;
+  if (token) {
+    try {
+      const decoded = jwtDecode(token.replace("Bearer ", ""));
+      isAdmin = decoded.role !== "user";
+    } catch (error) {
+      console.error("Token decode error:", error);
+      handleSignOut();
+    }
+  }
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      navigate("/");
+    if (!token) {
+      navigate("/", { replace: true });
     }
-  }, []);
+  }, [token, navigate]);
 
-  const handleSignOut = async () => {
-    try {
-      localStorage.removeItem("token");
-      localStorage.removeItem("name");
-      localStorage.removeItem("isAdmin");
-      navigate("/signin");
-    } catch (error) {
-      console.error("Sign out error:", error);
-    }
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("name");
+    localStorage.removeItem("isAdmin");
+    navigate("/login", { replace: true });
   };
+
+  // Don't render navbar until auth check is complete
+  if (token === null) {
+    return null;
+  }
 
   return (
     <nav className="bg-white shadow-lg">

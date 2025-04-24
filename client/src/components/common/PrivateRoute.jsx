@@ -22,6 +22,7 @@ const PrivateRoute = ({ children, isAdmin = false }) => {
 
     return children;
   } catch (error) {
+    console.log(error);
     localStorage.removeItem("token");
     localStorage.removeItem("isAdmin");
     localStorage.removeItem("name");

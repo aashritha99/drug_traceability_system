@@ -2,6 +2,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import { Navbar } from "../../components/common/Navbar";
 
 export function AdminDashboard() {
   const currentUser = localStorage.getItem("name");
@@ -21,6 +22,7 @@ export function AdminDashboard() {
         navigate("/user");
       }
     } catch (error) {
+      console.log(error);
       localStorage.removeItem("token");
       localStorage.removeItem("isAdmin");
       localStorage.removeItem("name");
@@ -29,7 +31,8 @@ export function AdminDashboard() {
   }, [navigate]);
 
   return (
-    <div>
+    <div className="bg-white h-screen">
+      <Navbar />
       <div className="bg-white shadow rounded-lg p-6">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">
           Admin Dashboard
