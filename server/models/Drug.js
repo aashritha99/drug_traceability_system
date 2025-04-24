@@ -1,52 +1,63 @@
 // server/models/Drug.js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const drugSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   batchNumber: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   manufacturer: {
     type: String,
-    required: true
+    required: true,
   },
   manufactureDate: {
     type: Date,
-    required: true
+    required: true,
   },
   expiryDate: {
     type: Date,
-    required: true
+    required: true,
   },
   composition: {
     type: String,
-    required: true
+    required: true,
+  },
+  qrCode: {
+    type: String,
+    required: true,
   },
   dosage: {
     type: String,
-    required: true
+    required: true,
   },
   status: {
     type: String,
-    enum: ['manufactured', 'distributed', 'dispensed', 'consumed'],
-    default: 'manufactured'
+    enum: ["manufactured", "distributed", "dispensed", "consumed"],
+    default: "manufactured",
   },
-  history: [{
-    status: String,
-    date: Date,
-    location: String,
-    handledBy: String
-  }],
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  history: [
+    {
+      status: String,
+      date: Date,
+      location: String,
+      handledBy: String,
+    },
+  ],
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model('Drug', drugSchema);
+module.exports = mongoose.model("Drug", drugSchema);

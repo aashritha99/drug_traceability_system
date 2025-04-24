@@ -1,125 +1,201 @@
-// server/controllers/drugController.js
-const Drug = require('../models/Drug');
-const User = require('../models/User');
-const QRCode = require('qrcode');
+const { v4: uuidv4 } = require("uuid");
+const QRCode = require("qrcode");
+const Drug = require("../models/Drug");
 
-exports.getAllDrugs = async (req, res) => {
-  try {
-    const drugs = await Drug.find().sort({ createdAt: -1 });
-    res.status(200).json(drugs);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-exports.createDrug = async (req, res) => {
-  try {
-    const drug = new Drug(req.body);
-    await drug.save();
-    
-    // Add initial history entry
-    drug.history.push({
-      status: 'manufactured',
-      date: new Date(),
-      location: drug.manufacturer,
-      handledBy: req.user.name || 'System'
+const AddDrug = async (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized Acess Denied",
     });
-    
-    await drug.save();
-    res.status(201).json(drug);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
   }
-};
 
-exports.updateDrug = async (req, res) => {
-  try {
-    const drug = await Drug.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    
-    if (!drug) {
-      return res.status(404).json({ error: 'Drug not found' });
-    }
-    
-    res.status(200).json(drug);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
+  console.log(req.user);
 
-exports.deleteDrug = async (req, res) => {
   try {
-    const drug = await Drug.findByIdAndDelete(req.params.id);
-    
-    if (!drug) {
-      return res.status(404).json({ error: 'Drug not found' });
-    }
-    
-    res.status(200).json({ message: 'Drug deleted successfully' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+    const {
+      name,
+      batchNumber,
+      manufacturer,
+      manufactureDate,
+      expiryDate,
+      composition,
+      dosage,
+    } = req.body;
 
-exports.trackDrug = async (req, res) => {
-  try {
-    const { status, location, handledBy } = req.body;
-    const drug = await Drug.findById(req.params.id);
-    
-    if (!drug) {
-      return res.status(404).json({ error: 'Drug not found' });
-    }
-    
-    drug.status = status;
-    drug.history.push({
-      status,
-      date: new Date(),
-      location,
-      handledBy: handledBy || req.user.name || 'Unknown'
-    });
-    
-    await drug.save();
-    res.status(200).json(drug);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
+    const drugId = uuidv4();
 
-exports.getDrugByBatch = async (req, res) => {
-  try {
-    const drug = await Drug.findOne({ batchNumber: req.params.batchNumber });
-    
-    if (!drug) {
-      return res.status(404).json({ error: 'Drug not found' });
-    }
-    
-    res.status(200).json(drug);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-exports.generateDrugQR = async (req, res) => {
-  try {
-    const drug = await Drug.findById(req.params.id);
-    
-    if (!drug) {
-      return res.status(404).json({ error: 'Drug not found' });
-    }
-    
     const qrData = {
-      id: drug._id,
-      name: drug.name,
-      batchNumber: drug.batchNumber,
-      system: 'DrugTrace'
+      drugId,
+      name,
+      batchNumber,
+      manufacturer,
+      manufactureDate,
+      expiryDate,
     };
-    
+
     const qrCode = await QRCode.toDataURL(JSON.stringify(qrData));
-    res.status(200).json({ qrCode, drug });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    const newDrug = await Drug.create({
+      name,
+      batchNumber,
+      manufacturer,
+      manufactureDate,
+      expiryDate,
+      composition,
+      qrCode,
+      createdBy: req.user.userId,
+      dosage,
+    });
+
+    res.json({
+      success: true,
+      message: "Drug Created Successfully",
+      Drug: newDrug,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Some internal Error Occurred",
+    });
   }
 };
+
+const fetchDrugs = async (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized Acess Denied",
+    });
+  }
+  const userId = req.user.userId;
+  const Drugs = await Drug.find({ createdBy: userId });
+
+  res.json({
+    success: true,
+    message: "Fetched Drugs",
+    Drugs,
+  });
+};
+
+const deleteDrug = async (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized Acess Denied",
+    });
+  }
+  const id = req.params.id;
+  await Drug.deleteOne({ _id: id });
+
+  res.json({
+    success: true,
+    message: "Drug Deleted",
+  });
+};
+
+const updateDrug = async (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized Access Denied",
+    });
+  }
+
+  try {
+    const { id } = req.params;
+    const {
+      name,
+      batchNumber,
+      manufacturer,
+      manufactureDate,
+      expiryDate,
+      composition,
+      dosage,
+      status,
+    } = req.body;
+
+    // Find the existing drug
+    const existingDrug = await Drug.findById(id);
+    if (!existingDrug) {
+      return res.status(404).json({
+        success: false,
+        message: "Drug not found",
+      });
+    }
+
+    // Verify the drug belongs to the requesting user
+    if (existingDrug.createdBy.toString() !== req.user.userId) {
+      return res.status(403).json({
+        success: false,
+        message: "You can only update drugs you created",
+      });
+    }
+
+    // Prepare update data
+    const updateData = {
+      name,
+      batchNumber,
+      manufacturer,
+      manufactureDate,
+      expiryDate,
+      composition,
+      dosage,
+    };
+
+    // Handle status change if provided
+    if (status && status !== existingDrug.status) {
+      updateData.status = status;
+      updateData.$push = {
+        history: {
+          status: status,
+          changedAt: new Date(),
+          changedBy: req.user.userId,
+        },
+      };
+    }
+
+    // Update the drug
+    const updatedDrug = await Drug.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    // Regenerate QR code if any critical fields changed
+    if (
+      name !== existingDrug.name ||
+      batchNumber !== existingDrug.batchNumber ||
+      manufacturer !== existingDrug.manufacturer ||
+      manufactureDate !== existingDrug.manufactureDate ||
+      expiryDate !== existingDrug.expiryDate
+    ) {
+      const qrData = {
+        drugId: existingDrug._id,
+        name,
+        batchNumber,
+        manufacturer,
+        manufactureDate,
+        expiryDate,
+      };
+
+      const qrCode = await QRCode.toDataURL(JSON.stringify(qrData));
+      updatedDrug.qrCode = qrCode;
+      await updatedDrug.save();
+    }
+
+    res.json({
+      success: true,
+      message: "Drug updated successfully",
+      Drug: updatedDrug,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+module.exports = { AddDrug, fetchDrugs, deleteDrug, updateDrug };
