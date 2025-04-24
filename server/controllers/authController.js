@@ -1,50 +1,130 @@
-const User = require('../models/User');
-const { admin } = require('../firebase-admin');
+const { default: mongoose } = require("mongoose");
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
-// Verify Admin Status
-exports.verifyAdmin = async (req, res, next) => {
+const SignUp = async (req, res) => {
+  const { name, email, password, role } = req.body;
+
+  const session = await mongoose.startSession();
+
   try {
-    const { idToken } = req.body;
-    
-    // Verify Firebase ID token
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const user = await User.findOne({ uid: decodedToken.uid });
-
-    if (!user || user.role !== 'admin') {
-      return res.status(403).json({ error: 'Admin access required' });
+    session.startTransaction();
+    const foundUser = await User.findOne({ email });
+    if (foundUser) {
+      await session.abortTransaction();
+      session.endSession();
+      res.status(404).json({
+        success: false,
+        message: "User already Exists",
+      });
     }
 
-    res.json({
-      uid: user.uid,
-      email: user.email,
-      role: user.role
-    });
-  } catch (err) {
-    res.status(401).json({ error: 'Invalid token' });
-  }
-};
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-// Promote User to Admin (Super Admin Only)
-exports.promoteToAdmin = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const requestingAdmin = await User.findOne({ uid: req.user.uid });
-
-    if (requestingAdmin.role !== 'super_admin') {
-      return res.status(403).json({ error: 'Super admin privileges required' });
-    }
-
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { role: 'admin' },
-      { new: true }
+    const user = await User.create(
+      [
+        {
+          name,
+          email,
+          role: role || "user",
+          password: hashedPassword,
+        },
+      ],
+      { session }
     );
 
-    // Update Firebase custom claims
-    await admin.auth().setCustomUserClaims(user.uid, { role: 'admin' });
+    await session.commitTransaction();
+    session.endSession();
 
-    res.json(user);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(201).json({
+      success: true,
+      user: {
+        UserId: user[0]._id,
+        name: user[0].name,
+        email: user[0].email,
+      },
+      message: "Sign Up Successful",
+    });
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Some error Occurred!",
+    });
   }
 };
+
+const SignIn = async (req, res) => {
+  const { email, password } = req.body;
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const findUser = await User.findOne({ email });
+    if (!findUser) {
+      await session.abortTransaction();
+      session.endSession();
+      res.status(404).json({
+        success: false,
+        message: "Please Signup First",
+      });
+    }
+
+    if (!(await bcrypt.compare(password, findUser.password))) {
+      await session.abortTransaction();
+      session.endSession();
+
+      res.status(401).json({
+        success: false,
+        message: "Incorrect Password",
+      });
+    }
+
+    const token = jwt.sign(
+      { UserId: findUser._id, role: findUser.role },
+      "satyam215"
+    );
+    console.log(token);
+
+    res.status(200).json({
+      success: true,
+      isAdmin: findUser.role === "user" ? false : true,
+      name: findUser.name,
+      message: "User Signed In successfully",
+      token: `Bearer ${token}`,
+    });
+
+    await session.commitTransaction();
+    session.endSession();
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Some error Occurred!",
+    });
+  }
+};
+
+const checkRole = (req, res) => {
+  const userDetails = req.user;
+  if (userDetails.isAdmin) {
+    res.json({
+      message: "Admin",
+    });
+  }
+
+  if (!userDetails.isAdmin) {
+    res.json({
+      message: "User",
+    });
+  }
+};
+
+module.exports = { SignUp, SignIn, checkRole };

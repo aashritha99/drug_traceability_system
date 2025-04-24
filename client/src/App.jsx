@@ -1,89 +1,76 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
-import { SignIn } from './pages/Auth/SignIn';
-import { AdminDashboard } from './pages/Admin/Dashboard';
-import { UserDashboard } from './pages/User/Dashboard';
-import { DrugManagement } from './pages/Admin/DrugManagement';
-import { TrackDrug } from './pages/User/TrackDrug';
-import { Navbar } from './components/common/Navbar';
-import { Footer } from './components/common/Footer';
-import Landing from './pages/Landing';
-import { Signup } from './pages/Auth/Signup';
-import { About } from './pages/User/About';
-import Contact from './pages/Contact'; // Add this import
-import './index.css';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { SignIn } from "./pages/Auth/SignIn";
+import { AdminDashboard } from "./pages/Admin/Dashboard";
+import { UserDashboard } from "./pages/User/Dashboard";
+import { DrugManagement } from "./pages/Admin/DrugManagement";
+import { TrackDrug } from "./pages/User/TrackDrug";
+import Landing from "./pages/Landing";
+import { Signup } from "./pages/Auth/Signup";
+import { About } from "./pages/User/About";
+import Contact from "./pages/Contact";
+import "./index.css";
+import PrivateRoute from "./components/common/PrivateRoute";
 
 function App() {
-  const { currentUser } = useAuth();
-  const isAdmin = currentUser?.email === 'admin@pharmatrack.com';
-
   return (
     <Router>
-      <div className="min-h-screen">
-        {/* Only show Navbar for authenticated routes */}
-        {currentUser && <Navbar />}
-        <main className="w-full min-h-screen bg-gray-50">
-          <Routes>
-            {/* Public Routes */}
-            <Route 
-              path="/" 
-              element={
-                currentUser 
-                  ? <Navigate to={isAdmin ? "/admin" : "/user"} /> 
-                  : <Landing />
-              } 
-            />
-            <Route path="/login" element={<SignIn />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/contact" element={<Contact />} /> 
-            
-            {/* Admin Routes */}
-            <Route 
-              path="/admin" 
-              element={
-                currentUser && isAdmin 
-                  ? <AdminDashboard /> 
-                  : <Navigate to="/" />
-              } 
-            />
-            <Route 
-              path="/admin/drugs" 
-              element={
-                currentUser && isAdmin 
-                  ? <DrugManagement /> 
-                  : <Navigate to="/" />
-              } 
-            />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<SignIn />} />
+        <Route path="/signup" element={<Signup />} />
 
-            {/* User Routes */}
-            <Route 
-              path="/user" 
-              element={
-                currentUser && !isAdmin 
-                  ? <UserDashboard /> 
-                  : <Navigate to="/" />
-              } 
-            />
-            <Route 
-              path="/user/track" 
-              element={
-                currentUser && !isAdmin 
-                  ? <TrackDrug /> 
-                  : <Navigate to="/" />
-              } 
-            />
+        {/* Protected Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoute isAdmin={true}>
+              <AdminDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/drugs"
+          element={
+            <PrivateRoute isAdmin={true}>
+              <DrugManagement />
+            </PrivateRoute>
+          }
+        />
 
-            {/* About Route */}
-            <Route path="/About" element={<About />} />
-            
-            {/* Catch-all Route */}
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </main>
-        {/* Only show Footer for authenticated routes */}
-        {currentUser && <Footer />}
-      </div>
+        {/* Protected User Routes */}
+        <Route
+          path="/user"
+          element={
+            <PrivateRoute>
+              <UserDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/user/track"
+          element={
+            <PrivateRoute>
+              <TrackDrug />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/user/about"
+          element={
+            <PrivateRoute>
+              <About />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Public Routes */}
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
     </Router>
   );
 }
