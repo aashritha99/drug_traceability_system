@@ -1,77 +1,51 @@
 // server/models/User.js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  uid: {
-    type: String,
-    required: true,
-    unique: true
-  },
   email: {
     type: String,
     required: true,
     unique: true,
     trim: true,
-    lowercase: true
+    lowercase: true,
   },
   name: {
     type: String,
-    trim: true
+    trim: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    min: [6, "Password must be atleast 6 characters"],
   },
   picture: {
-    type: String
+    type: String,
   },
   role: {
     type: String,
-    enum: ['admin', 'user'],
-    default: 'user'
+    enum: ["admin", "user"],
+    default: "user",
   },
   lastLogin: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   updatedAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 // Update the updatedAt field before saving
-userSchema.pre('save', function(next) {
+userSchema.pre("save", function (next) {
   this.updatedAt = Date.now();
   next();
 });
 
-// Static method to find or create user from Firebase auth data
-userSchema.statics.findOrCreate = async function(firebaseUser) {
-  let user = await this.findOne({ uid: firebaseUser.uid });
-  
-  if (!user) {
-    user = new this({
-      uid: firebaseUser.uid,
-      email: firebaseUser.email,
-      name: firebaseUser.name || '',
-      picture: firebaseUser.picture || '',
-      role: firebaseUser.email === 'admin@pharmatrack.com' ? 'admin' : 'user' // Replace with your admin email
-    });
-    await user.save();
-  } else {
-    // Update user data if needed
-    user.lastLogin = Date.now();
-    if (firebaseUser.name && user.name !== firebaseUser.name) {
-      user.name = firebaseUser.name;
-    }
-    if (firebaseUser.picture && user.picture !== firebaseUser.picture) {
-      user.picture = firebaseUser.picture;
-    }
-    await user.save();
-  }
-  
-  return user;
-};
+const User = mongoose.model("User", userSchema);
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = User;

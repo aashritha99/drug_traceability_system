@@ -1,16 +1,19 @@
 // client/src/pages/Admin/DrugManagement.jsx
-import { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { getDrugs, createDrug, updateDrug, deleteDrug } from '../../services/api';
-import { QRCode } from 'react-qr-code';
-import { Modal } from '../../components/common/Modal';
-import { DrugForm } from '../../components/drugs/DrugForm';
+import { useState, useEffect } from "react";
+import {
+  getDrugs,
+  createDrug,
+  updateDrug,
+  deleteDrug,
+} from "../../services/api";
+import { QRCode } from "react-qr-code";
+import { Modal } from "../../components/common/Modal";
+import { DrugForm } from "../../components/drugs/DrugForm";
 
 export function DrugManagement() {
-  const { currentUser } = useAuth();
   const [drugs, setDrugs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentDrug, setCurrentDrug] = useState(null);
   const [qrData, setQrData] = useState(null);
@@ -22,7 +25,8 @@ export function DrugManagement() {
         setDrugs(data);
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch drugs');
+        console.log(err);
+        setError("Failed to fetch drugs");
         setLoading(false);
       }
     };
@@ -36,27 +40,30 @@ export function DrugManagement() {
       setDrugs([...drugs, newDrug]);
       setIsModalOpen(false);
     } catch (err) {
-      setError('Failed to create drug');
+      console.log(err);
+      setError("Failed to create drug");
     }
   };
 
   const handleUpdate = async (id, drugData) => {
     try {
       const updatedDrug = await updateDrug(id, drugData);
-      setDrugs(drugs.map(drug => drug._id === id ? updatedDrug : drug));
+      setDrugs(drugs.map((drug) => (drug._id === id ? updatedDrug : drug)));
       setIsModalOpen(false);
       setCurrentDrug(null);
     } catch (err) {
-      setError('Failed to update drug');
+      console.log(err);
+      setError("Failed to update drug");
     }
   };
 
   const handleDelete = async (id) => {
     try {
       await deleteDrug(id);
-      setDrugs(drugs.filter(drug => drug._id !== id));
+      setDrugs(drugs.filter((drug) => drug._id !== id));
     } catch (err) {
-      setError('Failed to delete drug');
+      console.log(err);
+      setError("Failed to delete drug");
     }
   };
 
@@ -64,7 +71,7 @@ export function DrugManagement() {
     setQrData({
       id: drug._id,
       name: drug.name,
-      batchNumber: drug.batchNumber
+      batchNumber: drug.batchNumber,
     });
   };
 
@@ -95,19 +102,35 @@ export function DrugManagement() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Batch</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Manufacturer</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expiry</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Batch
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Manufacturer
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Expiry
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {drugs.map((drug) => (
               <tr key={drug._id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{drug.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{drug.batchNumber}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{drug.manufacturer}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {drug.name}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {drug.batchNumber}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {drug.manufacturer}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {new Date(drug.expiryDate).toLocaleDateString()}
                 </td>
@@ -143,7 +166,11 @@ export function DrugManagement() {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <DrugForm
           drug={currentDrug}
-          onSubmit={currentDrug ? (data) => handleUpdate(currentDrug._id, data) : handleCreate}
+          onSubmit={
+            currentDrug
+              ? (data) => handleUpdate(currentDrug._id, data)
+              : handleCreate
+          }
           onCancel={() => setIsModalOpen(false)}
         />
       </Modal>
@@ -151,15 +178,15 @@ export function DrugManagement() {
       {qrData && (
         <Modal isOpen={!!qrData} onClose={() => setQrData(null)}>
           <div className="p-6">
-            <h2 className="text-xl font-bold mb-4">QR Code for {qrData.name}</h2>
+            <h2 className="text-xl font-bold mb-4">
+              QR Code for {qrData.name}
+            </h2>
             <div className="flex justify-center mb-4">
-              <QRCode 
-                value={JSON.stringify(qrData)} 
-                size={256} 
-                level="H" 
-              />
+              <QRCode value={JSON.stringify(qrData)} size={256} level="H" />
             </div>
-            <p className="text-sm text-gray-600 mb-2">Batch: {qrData.batchNumber}</p>
+            <p className="text-sm text-gray-600 mb-2">
+              Batch: {qrData.batchNumber}
+            </p>
             <button
               onClick={() => setQrData(null)}
               className="mt-4 bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded"
