@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const authMiddleware = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
+    console.log(authHeader);
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res
@@ -11,13 +12,16 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const token = authHeader.split(" ")[1];
-    const decodedToken = await jwt.verify(token, "satyam215");
+    console.log(token);
+    const decodedToken = jwt.verify(token, "satyam215");
+    console.log(true);
+    console.log(decodedToken);
 
     // Check for admin custom claim
     if (decodedToken.role === "admin") {
       req.user = {
         isAdmin: true,
-        userId: decodedToken._id,
+        userId: decodedToken.UserId,
       };
       next(); // Allow admin to proceed
       return;
@@ -26,7 +30,7 @@ const authMiddleware = async (req, res, next) => {
     if (decodedToken.role === "user") {
       req.user = {
         isAdmin: false,
-        userId: decodedToken._id,
+        userId: decodedToken.UserId,
       };
       next();
       return;

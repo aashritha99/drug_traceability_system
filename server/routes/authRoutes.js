@@ -13,6 +13,6 @@ router.post("/signup", SignUp);
 
 router.post("/signin", SignIn);
 
-router.get("/checkRole", authMiddleware, checkRole);
+router.get("/checkRole", authMiddleware);
 
 module.exports = router;

@@ -85,11 +85,12 @@ const SignIn = async (req, res) => {
       });
     }
 
+    console.log(findUser._id);
+
     const token = jwt.sign(
       { UserId: findUser._id, role: findUser.role },
       "satyam215"
     );
-    console.log(token);
 
     res.status(200).json({
       success: true,
