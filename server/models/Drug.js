@@ -1,5 +1,6 @@
 // server/models/Drug.js
 const mongoose = require("mongoose");
+const { v4: uuidv4 } = require("uuid");
 
 const drugSchema = new mongoose.Schema({
   name: {
@@ -45,6 +46,10 @@ const drugSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
+  },
+  drugId: {
+    type: String,
+    default: uuidv4,
   },
   history: [
     {

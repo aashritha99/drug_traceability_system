@@ -34,11 +34,14 @@ const AddDrug = async (req, res) => {
       expiryDate,
     };
 
+    console.log(drugId);
+
     const qrCode = await QRCode.toDataURL(JSON.stringify(qrData));
 
     const newDrug = await Drug.create({
       name,
       batchNumber,
+      drugId,
       manufacturer,
       manufactureDate,
       expiryDate,
@@ -162,6 +165,7 @@ const updateDrug = async (req, res) => {
       runValidators: true,
     });
 
+    console.log("hello");
     // Regenerate QR code if any critical fields changed
     if (
       name !== existingDrug.name ||
@@ -198,4 +202,53 @@ const updateDrug = async (req, res) => {
   }
 };
 
-module.exports = { AddDrug, fetchDrugs, deleteDrug, updateDrug };
+const getDrugByQR = async (req, res) => {
+  try {
+    const { drugId } = req.params;
+
+    // Find drug by ID
+    const drug = await Drug.findOne({ drugId: drugId }).populate(
+      "createdBy",
+      "name email"
+    );
+
+    if (!drug) {
+      return res.status(404).json({
+        success: false,
+        message: "Drug not found",
+      });
+    }
+
+    // Return drug details without sensitive information
+    const drugDetails = {
+      _id: drug._id,
+      name: drug.name,
+      batchNumber: drug.batchNumber,
+      manufacturer: drug.manufacturer,
+      manufactureDate: drug.manufactureDate,
+      expiryDate: drug.expiryDate,
+      composition: drug.composition,
+      dosage: drug.dosage,
+      status: drug.status,
+      history: drug.history,
+      createdBy: {
+        name: drug.createdBy.name,
+        email: drug.createdBy.email,
+      },
+      qrCode: drug.qrCode,
+    };
+
+    res.json({
+      success: true,
+      drug: drugDetails,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+module.exports = { AddDrug, fetchDrugs, deleteDrug, updateDrug, getDrugByQR };

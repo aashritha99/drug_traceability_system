@@ -1,8 +1,8 @@
-// client/src/pages/User/Dashboard.jsx
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar } from "../../components/common/Navbar";
+import { FaSearch, FaHistory, FaQrcode } from "react-icons/fa";
 
 export function UserDashboard() {
   const currentUser = localStorage.getItem("name");
@@ -11,7 +11,6 @@ export function UserDashboard() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      console.log("hello");
       navigate("/login");
       return;
     }
@@ -33,44 +32,87 @@ export function UserDashboard() {
   return (
     <>
       <Navbar />
-      <div className=" bg-white h-screen  px-4 py-8">
-        <div className="bg-white w-full shadow-lg rounded-2xl p-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">
-            User Dashboard
-          </h1>
+      <div className="bg-gray-50 min-h-screen px-4 py-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+              Welcome, {currentUser || "User"}
+            </h1>
+            <p className="text-gray-600 mb-6">
+              Track pharmaceutical drugs and verify their authenticity using our
+              platform.
+            </p>
 
-          {/* Dashboard Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Track Drug Card */}
-            <Link
-              to="/user/track"
-              className="rounded-xl p-6 bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 shadow-md"
-            >
-              <h2 className="text-xl font-semibold mb-2">Track Drug</h2>
-              <p className="text-blue-100">
-                Scan or enter drug details to track its lifecycle.
-              </p>
-            </Link>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Scan QR Card */}
+              <Link
+                to="/user/scan"
+                className="bg-white border border-blue-100 rounded-lg p-6 hover:shadow-lg transition-shadow"
+              >
+                <div className="flex items-center mb-4">
+                  <div className="bg-blue-100 p-3 rounded-full mr-4">
+                    <FaQrcode className="text-blue-600 text-xl" />
+                  </div>
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    Scan QR Code
+                  </h2>
+                </div>
+                <p className="text-gray-600">
+                  Scan a drug's QR code to view its complete details and
+                  tracking history.
+                </p>
+              </Link>
 
-            {/* My History Card */}
-            <div className="rounded-xl p-6 bg-green-600 hover:bg-green-700 text-white transition-all duration-300 shadow-md">
-              <h2 className="text-xl font-semibold mb-2">My History</h2>
-              <p className="text-green-100">
-                View drugs you've tracked recently.
-              </p>
+              {/* Track Drug Card */}
+              <Link
+                to="/user/track"
+                className="bg-white border border-green-100 rounded-lg p-6 hover:shadow-lg transition-shadow"
+              >
+                <div className="flex items-center mb-4">
+                  <div className="bg-green-100 p-3 rounded-full mr-4">
+                    <FaSearch className="text-green-600 text-xl" />
+                  </div>
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    Track Drug
+                  </h2>
+                </div>
+                <p className="text-gray-600">
+                  Search for a drug using its batch number to verify its
+                  authenticity.
+                </p>
+              </Link>
+
+              {/* History Card */}
+              <Link
+                to="/user/history"
+                className="bg-white border border-purple-100 rounded-lg p-6 hover:shadow-lg transition-shadow"
+              >
+                <div className="flex items-center mb-4">
+                  <div className="bg-purple-100 p-3 rounded-full mr-4">
+                    <FaHistory className="text-purple-600 text-xl" />
+                  </div>
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    My History
+                  </h2>
+                </div>
+                <p className="text-gray-600">
+                  View all drugs you've recently tracked and their current
+                  status.
+                </p>
+              </Link>
             </div>
           </div>
 
-          {/* Welcome Message */}
-          <div className="mt-10 p-6 bg-gray-50 rounded-xl border border-gray-200">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-              Welcome, {currentUser?.displayName || "User"}
+          {/* Recent Activity Section */}
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">
+              Recent Activity
             </h2>
-            <p className="text-gray-600">
-              Use this platform to track the lifecycle of pharmaceutical drugs
-              from manufacture to consumption. Stay informed and ensure drug
-              authenticity.
-            </p>
+            <div className="bg-gray-50 rounded-lg p-4 text-center">
+              <p className="text-gray-500">
+                Your recent drug scans will appear here
+              </p>
+            </div>
           </div>
         </div>
       </div>
