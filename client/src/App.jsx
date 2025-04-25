@@ -15,6 +15,8 @@ import { About } from "./pages/User/About";
 import Contact from "./pages/Contact";
 import "./index.css";
 import PrivateRoute from "./components/common/PrivateRoute";
+import { ScanDrug } from "./pages/User/ScanDrug";
+import { DrugDetails } from "./pages/User/DrugDetails";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/user/scan" element={<ScanDrug />} />
+        <Route path="/user/drug/:drugId" element={<DrugDetails />} />
 
         {/* Protected Admin Routes */}
         <Route

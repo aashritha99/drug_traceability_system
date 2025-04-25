@@ -8,11 +8,13 @@ const {
   fetchDrugs,
   deleteDrug,
   updateDrug,
+  getDrugByQR,
 } = require("../controllers/drugController");
 
 router.post("/addDrug", authMiddleware, AddDrug);
 router.get("/all", authMiddleware, fetchDrugs);
 router.delete("/:id", authMiddleware, deleteDrug);
 router.put("/:id", authMiddleware, updateDrug);
+router.get("/qr/:drugId", getDrugByQR);
 
 module.exports = router;
