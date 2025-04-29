@@ -55,7 +55,7 @@ export function Navbar() {
                   Dashboard
                 </Link>
                 <Link
-                  to="/about"
+                  to="/user/about"
                   className="px-3 py-2 text-gray-700 hover:text-primary transition"
                 >
                   About

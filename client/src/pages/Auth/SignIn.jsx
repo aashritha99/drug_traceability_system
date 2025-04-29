@@ -113,7 +113,7 @@ export function SignIn() {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Email address
+                Email Address
               </label>
               <div className="mt-1 relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -135,7 +135,7 @@ export function SignIn() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border text-gray-700 placeholder-gray-400"
+                  className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border text-gray-700 placeholder-gray-400 bg-gray-200"
                   placeholder="you@example.com"
                 />
               </div>
@@ -171,8 +171,8 @@ export function SignIn() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border text-gray-700 placeholder-gray-400"
-                  placeholder="••••••••"
+                  className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-200 rounded-md py-2.5 border text-gray-700 placeholder-gray-400 bg-gray-200"
+                  placeholder="••••••"
                 />
               </div>
             </div>
@@ -183,7 +183,7 @@ export function SignIn() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded bg-gray-200"
                 />
                 <label
                   htmlFor="remember-me"

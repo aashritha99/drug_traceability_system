@@ -94,7 +94,7 @@ export function TrackDrug() {
               value={batchNumber}
               onChange={(e) => setBatchNumber(e.target.value)}
               placeholder="Enter batch number"
-              className="flex-grow px-4 py-2 border border-gray-300 rounded-l focus:outline-none focus:ring-2 focus:ring-primary"
+              className="flex-grow px-4 py-2 border border-gray-300 rounded-l focus:outline-none focus:ring-2 focus:ring-primary bg-gray-200 "
             />
             <button
               onClick={handleSearch}

@@ -134,7 +134,7 @@
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border text-gray-700 placeholder-gray-400"
+                    className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border text-gray-700 placeholder-gray-400 bg-gray-200"
                     placeholder="Aashrita"
                   />
                 </div>
@@ -166,7 +166,7 @@
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border text-gray-700 placeholder-gray-400"
+                    className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border text-gray-700 placeholder-gray-400 bg-gray-200"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -202,7 +202,7 @@
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border text-gray-700 placeholder-gray-400"
+                    className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border text-gray-700 placeholder-gray-400 bg-gray-200"
                     placeholder="••••••••"
                   />
                 </div>
@@ -238,7 +238,7 @@
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border text-gray-700 placeholder-gray-400"
+                    className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border text-gray-700 placeholder-gray-400 bg-gray-200"
                     placeholder="••••••••"
                   />
                 </div>

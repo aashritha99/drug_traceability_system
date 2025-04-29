@@ -46,6 +46,24 @@ function App() {
           }
         />
 
+        <Route
+          path="/admin/track"
+          element={
+            <PrivateRoute isAdmin={true}>
+              <TrackDrug />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/admin/scan"
+          element={
+            <PrivateRoute isAdmin={true}>
+              <ScanDrug />
+            </PrivateRoute>
+          }
+        />
+
         {/* Protected User Routes */}
         <Route
           path="/user"
@@ -74,6 +92,7 @@ function App() {
 
         {/* Public Routes */}
         <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<about />} />
       </Routes>
     </Router>
   );
